@@ -23,4 +23,4 @@ jobs:
         uses: r0user/release-apk@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APP_FOLDER: .
+          APP_FOLDER: app
