@@ -74,8 +74,9 @@ class DialerActivity : AppCompatActivity() {
         binding.buttonCall.setOnClickListener {
             if (binding.phoneNumberTextView.text.length >= 10 &&
                 (binding.phoneNumberTextView.text.startsWith("06")
-                        || binding.phoneNumberTextView.text.startsWith("00")))
-            makeCall(binding.phoneNumberTextView.text.toString())
+                        || binding.phoneNumberTextView.text.startsWith("00"))) {
+                makeCall(binding.phoneNumberTextView.text.toString())
+                        }
         }
     }
 
