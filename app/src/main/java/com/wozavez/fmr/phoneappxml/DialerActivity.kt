@@ -1,19 +1,19 @@
 package com.wozavez.fmr.phoneappxml
 
 import android.Manifest.permission.CALL_PHONE
+import android.app.role.RoleManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.telecom.TelecomManager
-import android.telecom.TelecomManager.ACTION_CHANGE_DEFAULT_DIALER
-import android.telecom.TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME
 import android.widget.Button
 import android.widget.TableRow
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import androidx.core.content.PermissionChecker.checkSelfPermission
-import androidx.core.net.toUri
 import androidx.core.view.children
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -46,19 +46,13 @@ class DialerActivity : AppCompatActivity() {
                         }
                         if (button.text.isNotEmpty() && button.text[0] == '1') {
                             button.setOnLongClickListener {
-                                val s = Uri.encode("*102#")
-                                val callIntent = Intent(Intent.ACTION_CALL)
-                                callIntent.setData(Uri.parse("tel:$s"))
-                                startActivity(callIntent)
+                                makeCall("*102#")
                                 return@setOnLongClickListener true
                             }
                         }
                         else if (button.text.isNotEmpty() && button.text[0] == '2') {
                             button.setOnLongClickListener {
-                                val s = Uri.encode("*121#")
-                                val callIntent = Intent(Intent.ACTION_CALL)
-                                callIntent.setData(Uri.parse("tel:$s"))
-                                startActivity(callIntent)
+                                makeCall("*121#")
                                 return@setOnLongClickListener true
                             }
                         }
@@ -77,41 +71,32 @@ class DialerActivity : AppCompatActivity() {
             binding.buttonBackspace.isInvisible = true
             return@setOnLongClickListener true
         }
-        binding.buttonCall.setOnClickListener { makeCall() }
+        binding.buttonCall.setOnClickListener {
+            if (binding.phoneNumberTextView.text.length >= 10 &&
+                (binding.phoneNumberTextView.text.startsWith("06")
+                        || binding.phoneNumberTextView.text.startsWith("00")))
+            makeCall(binding.phoneNumberTextView.text.toString())
+        }
     }
 
-    private fun makeCall() {
+    private fun makeCall(number: String) {
         if (checkSelfPermission(this, CALL_PHONE) == PERMISSION_GRANTED) {
-            val uri = "tel:${binding.phoneNumberTextView.text}".toUri()
-            startActivity(Intent(Intent.ACTION_CALL, uri))
+            val telecomManager = getSystemService(TELECOM_SERVICE) as TelecomManager
+            val s = Uri.encode(number)
+
+            telecomManager.placeCall(Uri.parse("tel:$s"), null)
         } else {
             requestPermissions(this, arrayOf(CALL_PHONE), REQUEST_PERMISSION)
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_PERMISSION && PERMISSION_GRANTED in grantResults) {
-            makeCall()
-        }
-    }
-
     private fun offerReplacingDefaultDialer() {
-        if (getSystemService(TelecomManager::class.java).defaultDialerPackage != packageName) {
-//            Intent(ACTION_CHANGE_DEFAULT_DIALER)
-//                .putExtra(EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, packageName)
-//                .let(::startActivity)
-            val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
-                .putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, packageName)
-            startActivityForResult(intent, REQUEST_PERMISSION)
-        }
-        val intent = Intent(ACTION_CHANGE_DEFAULT_DIALER)
-            .putExtra(EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, packageName)
-        startActivityForResult(intent, REQUEST_PERMISSION)
+        val activityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {}
+        val roleManager = getSystemService(ROLE_SERVICE) as RoleManager
+
+        activityResultLauncher.launch(roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER))
     }
 
     companion object {

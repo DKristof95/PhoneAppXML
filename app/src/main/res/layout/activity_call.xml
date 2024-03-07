@@ -19,27 +19,6 @@
         tools:text="Hello World!"
         />
 
-    <Button
-        android:id="@+id/answer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/answer"
-        app:layout_constraintBaseline_toBaselineOf="@+id/hangup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/hangup"
-        />
-
-    <Button
-        android:id="@+id/hangup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hang_up"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/answer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/callInfo"
-        />
-
     <ImageButton
         android:id="@+id/buttonEndCall"
         android:layout_width="wrap_content"
@@ -48,8 +27,8 @@
         android:layout_marginTop="106dp"
         android:layout_marginEnd="186dp"
         android:layout_marginBottom="349dp"
-        android:background="#F81A1A"
-        android:contentDescription="@string/end_call_ButtonHUN"
+        android:background="#ff0000"
+        android:contentDescription="@string/end_call_buttonHUN"
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:visibility="visible"
@@ -63,9 +42,32 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="190dp"
+        android:layout_marginEnd="177dp"
+        android:layout_marginBottom="4dp"
         android:visibility="invisible"
-        tools:layout_editor_absoluteX="64dp"
-        tools:layout_editor_absoluteY="111dp" />
+        app:layout_constraintBottom_toTopOf="@+id/callInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/buttonSpeaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="178dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="185dp"
+        android:layout_marginBottom="283dp"
+        android:background="#888888"
+        android:contentDescription="@string/speaker_buttonHUN"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonEndCall"
+        app:srcCompat="@drawable/baseline_speaker_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,5 +17,6 @@
     <string name="_9">9</string>
     <string name="del_buttonHUN">Törlés</string>
     <string name="call_buttonHUN">Hívás indítása</string>
-    <string name="end_call_ButtonHUN">Hívás befejezése</string>
+    <string name="end_call_buttonHUN">Hívás befejezése</string>
+    <string name="speaker_buttonHUN">Kihangosítás</string>
 </resources>
